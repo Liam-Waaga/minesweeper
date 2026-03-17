@@ -8,4 +8,6 @@ simple minesweeper game just because i want one
 
 `cmake --build ./build -j`
 
+`sudo cmake --install build`
+
 i do not claim copyright of the textures. eveything else, including the code and application (excluding the textures) however, is licensed under the [license](LICENSE.md)

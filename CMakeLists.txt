@@ -40,5 +40,11 @@ target_link_libraries(
 )
 
 install(
+  TARGETS minesweeper
+  DESTINATION bin
+)
 
+install(
+  FILES minesweeper.desktop
+  DESTINATION share/applications
 )
