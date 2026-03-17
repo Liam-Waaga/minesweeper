@@ -1,18 +1,25 @@
 
 /* Copyright c 2026 N Liam Waaga */
-/* Permission is hereby granted, free of charge, to any person obtaining a copy of this software */
-/* and associated documentation files (the "Software"), to deal in the Software without */
-/* restriction, sublicense, and/or sell copies of the Software, and to permit persons to whom the */
+/* Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software */
+/* and associated documentation files (the "Software"), to deal in the Software
+ * without */
+/* restriction, sublicense, and/or sell copies of the Software, and to permit
+ * persons to whom the */
 /* Software is furnished to do so, subject to the following conditions: */
-/* The above copyright notice and this permission notice shall beincluded in all copies or */
+/* The above copyright notice and this permission notice shall beincluded in all
+ * copies or */
 /* substantial portions of the Software. */
-/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRENTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING */
-/* BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULARE PURPOSE AND */
-/* NONINFRINGMENT. IN NO EVENT SHALL TEH AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, */
-/* DAMAGES OR OTHER LIABILITY< WHETER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING */
-/* FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRENTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING */
+/* BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULARE PURPOSE AND */
+/* NONINFRINGMENT. IN NO EVENT SHALL TEH AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ * FOR ANY CLAIM, */
+/* DAMAGES OR OTHER LIABILITY< WHETER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING */
+/* FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE. */
 
 #include <cstdlib>
 #include <ctime>
@@ -132,7 +139,7 @@ struct Tile {
 constexpr int BORDER_WIDTH = 8;
 constexpr int HEADER_HEIGHT = 8;
 
-constexpr int BOMB_COUNT = 175;
+constexpr int BOMB_COUNT = 200;
 
 constexpr int TILE_X = 35;
 constexpr int TILE_Y = 25;
@@ -187,7 +194,6 @@ int count_marked(GameState &game_state, int x, int y) {
     num++;
   return num;
 }
-
 
 GameState generate_board(GameState &game_state, int freex, int freey) {
 
@@ -302,7 +308,7 @@ void click(GameState &game_state, int x, int y, bool is_mark = false) {
       if (game_state[x][y].num == 0) {
         if (x > 0 && y > 0 && !game_state[x - 1][y - 1].is_clicked)
           click(game_state, x - 1, y - 1, false);
-        if (x && y > 0 && !game_state[x][y - 1].is_clicked)
+        if (y > 0 && !game_state[x][y - 1].is_clicked)
           click(game_state, x, y - 1, false);
         if (x < TILE_X - 1 && y > 0 && !game_state[x + 1][y - 1].is_clicked)
           click(game_state, x + 1, y - 1, false);
@@ -354,8 +360,8 @@ void click(GameState &game_state, int x, int y, bool is_mark = false) {
       game_state[x][y].is_marked = false;
     } else {
       game_state[x][y].is_marked =
-          !game_state[x][y].is_clicked; /* if it has already been clicked, then we
-                                           are doing the auto mark thing */
+          !game_state[x][y].is_clicked; /* if it has already been clicked, then
+                                           we are doing the auto mark thing */
     }
     /* TODO: auto marking */
   }
@@ -440,6 +446,9 @@ void draw_board(GameState &game_state) {
 
 int main() {
   srand(time(NULL));
+#ifdef NDEBUG
+  SetTraceLogLevel(LOG_NONE);
+#endif
   InitWindow(WINDOW_X, WINDOW_Y, "Minesweeper");
 
   ZERO_IMG = LoadImageFromMemory(".png", ZERO_PNG, sizeof(ZERO_PNG));
@@ -529,7 +538,7 @@ int main() {
     }
     draw_board(game_state);
     EndDrawing();
-    if (IsKeyReleased(KEY_R)) {
+    if (IsKeyPressed(KEY_R) || IsKeyPressedRepeat(KEY_R)) {
       game_state = blank_board();
       generate_board(game_state, TILE_X / 2, TILE_Y / 2);
       click(game_state, TILE_X / 2, TILE_Y / 2);
